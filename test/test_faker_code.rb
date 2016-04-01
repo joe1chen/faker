@@ -30,7 +30,7 @@ class TestFakerCode < Test::Unit::TestCase
   end
 
   def test_asin
-    assert @tester.asin.match(/^B000([A-Z]|\d){6}$/)
+    assert @tester.asin.match(/^B([A-Z]|\d){9}$/)
   end
 
   def test_nric

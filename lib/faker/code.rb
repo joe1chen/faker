@@ -1,6 +1,10 @@
 module Faker
   class Code < Base
     flexible :code
+
+    @@asins = []
+    @@max_asins_to_load = 200000
+
     class << self
 
       # Generates a 10 digit NPI (National Provider Identifier
@@ -41,7 +45,21 @@ module Faker
       # Retrieves a real Amazon ASIN code list taken from
       # https://archive.org/details/asin_listing
       def asin
-        fetch('code.asin')
+        #fetch('code.asin')
+
+        if @@asins.empty?
+          asins_gz_file = open(File.dirname(__FILE__) + '/../asins.txt.gz')
+          gz = Zlib::GzipReader.new(asins_gz_file)
+          i = 0
+          gz.each_line do |line|
+            @@asins << line.gsub(/\s+/, '')
+            i += 1
+
+            break if @@max_asins_to_load <= i
+          end
+        end
+
+        @@asins.sample
       end
 
     private
